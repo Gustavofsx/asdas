@@ -64,6 +64,10 @@ class _VehicleCardState extends State<VehicleCard>
     _animationController.reverse();
   }
 
+  String _formatPrice(double price) {
+    return 'R\$ ';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Semantics(
@@ -116,11 +120,34 @@ class _VehicleCardState extends State<VehicleCard>
                               return Container(
                                 height: 200,
                                 width: double.infinity,
-                                color: Colors.grey[300],
-                                child: Icon(
-                                  Icons.directions_car,
-                                  size: 64,
-                                  color: Colors.grey[600],
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.grey[300]!,
+                                      Colors.grey[400]!,
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.directions_car,
+                                      size: 64,
+                                      color: Colors.grey[600],
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      'Imagem não disponível',
+                                      style: TextStyle(
+                                        color: Colors.grey[600],
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               );
                             },
@@ -151,6 +178,28 @@ class _VehicleCardState extends State<VehicleCard>
                               ),
                             ),
                           ),
+                          Positioned(
+                            top: 12,
+                            left: 12,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withValues(alpha: 0.7),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Text(
+                                '',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -159,6 +208,7 @@ class _VehicleCardState extends State<VehicleCard>
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          // Título principal
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -170,19 +220,32 @@ class _VehicleCardState extends State<VehicleCard>
                                     fontWeight: FontWeight.bold,
                                     color: Color(0xFF2c3e50),
                                   ),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                              Text(
-                                '',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey[600],
-                                  fontWeight: FontWeight.w500,
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  'ID: ',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.blue[700],
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                               ),
                             ],
                           ),
                           const SizedBox(height: 8),
+                          
+                          // Informações do veículo
                           Row(
                             children: [
                               Icon(
@@ -196,6 +259,7 @@ class _VehicleCardState extends State<VehicleCard>
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: Colors.grey[600],
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                               const SizedBox(width: 16),
@@ -210,21 +274,50 @@ class _VehicleCardState extends State<VehicleCard>
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: Colors.grey[600],
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                             ],
                           ),
+                          const SizedBox(height: 8),
+                          
+                          // Descrição
+                          Text(
+                            widget.vehicle.description,
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.grey[600],
+                              height: 1.3,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                           const SizedBox(height: 12),
+                          
+                          // Preço e botão
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                'R\$ ',
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF2ecc71),
-                                ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Preço',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey[600],
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Text(
+                                    _formatPrice(widget.vehicle.price),
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xFF2ecc71),
+                                    ),
+                                  ),
+                                ],
                               ),
                               Container(
                                 padding: const EdgeInsets.symmetric(

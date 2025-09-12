@@ -98,19 +98,30 @@ class VehicleProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      final vehicle = await ApiService.createVehicle(vehicleData);
-      if (vehicle != null) {
-        _vehicles.add(vehicle);
-        _isLoading = false;
-        notifyListeners();
-        return true;
-      } else {
-        _error = 'Erro ao criar veículo na API';
-        _isLoading = false;
-        notifyListeners();
-        return false;
-      }
+      print('Dados recebidos no Provider: '); // Debug
+      
+      // Simula criação de veículo localmente (já que a API não salva realmente)
+      final newVehicle = Vehicle(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        brand: vehicleData['brand'],
+        model: vehicleData['model'],
+        year: vehicleData['year'],
+        color: vehicleData['color'],
+        price: vehicleData['price'],
+        stockQuantity: vehicleData['stockQuantity'],
+        description: vehicleData['description'],
+        imageUrl: vehicleData['imageUrl'] ?? 'https://via.placeholder.com/400x300?text=Sem+Imagem',
+        createdAt: DateTime.now(),
+      );
+      
+      _vehicles.add(newVehicle);
+      _isLoading = false;
+      notifyListeners();
+      
+      print('Veículo adicionado com sucesso:  '); // Debug
+      return true;
     } catch (e) {
+      print('Erro ao adicionar veículo: '); // Debug
       _error = e.toString();
       _isLoading = false;
       notifyListeners();

@@ -19,17 +19,18 @@ class ApiService {
         
         // Converte os dados da API para o formato de veículos
         return data.take(10).map((json) {
+          final id = json['id'] as int;
           return Vehicle(
-            id: json['id'].toString(),
+            id: id.toString(),
             brand: _getRandomBrand(),
             model: _getRandomModel(),
-            year: 2020 + (json['id'] % 4),
+            year: 2020 + (id % 4),
             color: _getRandomColor(),
-            price: 30000.0 + (json['id'] * 5000),
-            stockQuantity: (json['id'] % 10) + 1,
+            price: 30000.0 + (id * 5000),
+            stockQuantity: (id % 10) + 1,
             description: json['body'] ?? 'Descrição do veículo',
             imageUrl: 'https://picsum.photos/400/300?random=',
-            createdAt: DateTime.now().subtract(Duration(days: json['id'])),
+            createdAt: DateTime.now().subtract(Duration(days: id)),
           );
         }).toList();
       } else {
@@ -50,18 +51,19 @@ class ApiService {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
+        final vehicleId = data['id'] as int;
         
         return Vehicle(
-          id: data['id'].toString(),
+          id: vehicleId.toString(),
           brand: _getRandomBrand(),
           model: _getRandomModel(),
-          year: 2020 + (data['id'] % 4),
+          year: 2020 + (vehicleId % 4),
           color: _getRandomColor(),
-          price: 30000.0 + (data['id'] * 5000),
-          stockQuantity: (data['id'] % 10) + 1,
+          price: 30000.0 + (vehicleId * 5000),
+          stockQuantity: (vehicleId % 10) + 1,
           description: data['body'] ?? 'Descrição do veículo',
           imageUrl: 'https://picsum.photos/400/300?random=',
-          createdAt: DateTime.now().subtract(Duration(days: data['id'])),
+          createdAt: DateTime.now().subtract(Duration(days: vehicleId)),
         );
       } else {
         return null;
