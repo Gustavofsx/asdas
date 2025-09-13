@@ -103,16 +103,18 @@ class VehicleProvider with ChangeNotifier {
       // Simula criação de veículo localmente (já que a API não salva realmente)
       final newVehicle = Vehicle(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
-        brand: vehicleData['brand'],
-        model: vehicleData['model'],
-        year: vehicleData['year'],
-        color: vehicleData['color'],
-        price: vehicleData['price'],
-        stockQuantity: vehicleData['stockQuantity'],
-        description: vehicleData['description'],
+        brand: vehicleData['brand'] ?? '',
+        model: vehicleData['model'] ?? '',
+        year: vehicleData['year'] ?? 2023,
+        color: vehicleData['color'] ?? '',
+        price: vehicleData['price'] ?? 0.0,
+        stockQuantity: vehicleData['stockQuantity'] ?? 0,
+        description: vehicleData['description'] ?? '',
         imageUrl: vehicleData['imageUrl'] ?? 'https://via.placeholder.com/400x300?text=Sem+Imagem',
         createdAt: DateTime.now(),
       );
+      
+      print('Veículo criado:   - Imagem: '); // Debug
       
       _vehicles.add(newVehicle);
       _isLoading = false;

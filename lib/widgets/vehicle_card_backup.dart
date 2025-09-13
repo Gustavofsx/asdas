@@ -65,17 +65,14 @@ class _VehicleCardState extends State<VehicleCard>
   }
 
   String _formatPrice(double price) {
-    return 'R\$ ${price.toStringAsFixed(0).replaceAllMapped(
-      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-      (Match m) => '${m[1]}.',
-    )}';
+    return 'R\$ ';
   }
 
   @override
   Widget build(BuildContext context) {
     return Semantics(
       button: true,
-      label: 'Veículo ${widget.vehicle.brand} ${widget.vehicle.model}',
+      label: 'Veículo  ',
       hint: 'Toque para ver detalhes do veículo',
       child: AnimatedBuilder(
         animation: _scaleAnimation,
@@ -194,7 +191,7 @@ class _VehicleCardState extends State<VehicleCard>
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Text(
-                                '${widget.vehicle.year}',
+                                '',
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 12,
@@ -206,7 +203,7 @@ class _VehicleCardState extends State<VehicleCard>
                         ],
                       ),
                     ),
-                    // Informações do veículo
+                    // Informações completas do veículo
                     Padding(
                       padding: const EdgeInsets.all(16),
                       child: Column(
@@ -214,9 +211,9 @@ class _VehicleCardState extends State<VehicleCard>
                         children: [
                           // Título principal - Marca e Modelo
                           Text(
-                            '${widget.vehicle.brand} ${widget.vehicle.model}',
+                            ' ',
                             style: const TextStyle(
-                              fontSize: 22,
+                              fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: Color(0xFF2c3e50),
                             ),
@@ -228,27 +225,6 @@ class _VehicleCardState extends State<VehicleCard>
                           // Informações principais em linha
                           Row(
                             children: [
-                              // Ano
-                              Expanded(
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.calendar_today,
-                                      size: 16,
-                                      color: Colors.grey[600],
-                                    ),
-                                    const SizedBox(width: 4),
-                                    Text(
-                                      '${widget.vehicle.year}',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey[600],
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
                               // Cor
                               Expanded(
                                 child: Row(
@@ -270,76 +246,32 @@ class _VehicleCardState extends State<VehicleCard>
                                   ],
                                 ),
                               ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          
-                          // Estoque
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.inventory,
-                                size: 16,
-                                color: Colors.grey[600],
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                '${widget.vehicle.stockQuantity} unidades em estoque',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey[600],
-                                  fontWeight: FontWeight.w500,
+                              // Estoque
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.inventory,
+                                      size: 16,
+                                      color: Colors.grey[600],
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      ' unidades',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey[600],
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: 12),
                           
-                          // Preço destacado
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  const Color(0xFF2ecc71).withValues(alpha: 0.1),
-                                  const Color(0xFF27ae60).withValues(alpha: 0.1),
-                                ],
-                                begin: Alignment.centerLeft,
-                                end: Alignment.centerRight,
-                              ),
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: const Color(0xFF2ecc71).withValues(alpha: 0.3),
-                                width: 1,
-                              ),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Preço',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.grey[600],
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  _formatPrice(widget.vehicle.price),
-                                  style: const TextStyle(
-                                    fontSize: 28,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xFF2ecc71),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          
-                          // Descrição (se existir)
+                          // Descrição
                           if (widget.vehicle.description.isNotEmpty) ...[
                             Container(
                               padding: const EdgeInsets.all(12),
@@ -362,49 +294,70 @@ class _VehicleCardState extends State<VehicleCard>
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: 12),
                           ],
                           
-                          // Botão de detalhes
-                          SizedBox(
-                            width: double.infinity,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 20,
-                                vertical: 12,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).primaryColor,
-                                borderRadius: BorderRadius.circular(25),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
-                                    spreadRadius: 0,
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                          // Preço e botão de ação
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              // Preço
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Icon(
-                                    Icons.visibility,
-                                    size: 18,
-                                    color: Colors.white,
-                                  ),
-                                  const SizedBox(width: 8),
                                   Text(
-                                    'Ver Detalhes Completos',
+                                    'Preço',
                                     style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white,
+                                      fontSize: 12,
+                                      color: Colors.grey[600],
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Text(
+                                    _formatPrice(widget.vehicle.price),
+                                    style: const TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xFF2ecc71),
                                     ),
                                   ),
                                 ],
                               ),
-                            ),
+                              // Botão de detalhes
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 8,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                    color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
+                                    width: 1,
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.visibility,
+                                      size: 16,
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      'Ver Detalhes',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
