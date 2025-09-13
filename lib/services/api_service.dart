@@ -10,7 +10,7 @@ class ApiService {
   static Future<List<Vehicle>> fetchVehicles() async {
     try {
       final response = await http.get(
-        Uri.parse(''),
+        Uri.parse('$baseUrl$vehiclesEndpoint'),
         headers: {'Content-Type': 'application/json'},
       );
 
@@ -29,15 +29,15 @@ class ApiService {
             price: 30000.0 + (id * 5000),
             stockQuantity: (id % 10) + 1,
             description: json['body'] ?? 'Descrição do veículo',
-            imageUrl: 'https://picsum.photos/400/300?random=',
+            imageUrl: 'https://picsum.photos/400/300?random=$id',
             createdAt: DateTime.now().subtract(Duration(days: id)),
           );
         }).toList();
       } else {
-        throw Exception('Falha ao carregar veículos: ');
+        throw Exception('Falha ao carregar veículos: ${response.statusCode}');
       }
     } catch (e) {
-      throw Exception('Erro na conexão: ');
+      throw Exception('Erro na conexão: $e');
     }
   }
 
@@ -45,7 +45,7 @@ class ApiService {
   static Future<Vehicle?> fetchVehicleById(String id) async {
     try {
       final response = await http.get(
-        Uri.parse('/'),
+        Uri.parse('$baseUrl$vehiclesEndpoint/$id'),
         headers: {'Content-Type': 'application/json'},
       );
 
@@ -62,7 +62,7 @@ class ApiService {
           price: 30000.0 + (vehicleId * 5000),
           stockQuantity: (vehicleId % 10) + 1,
           description: data['body'] ?? 'Descrição do veículo',
-          imageUrl: 'https://picsum.photos/400/300?random=',
+          imageUrl: 'https://picsum.photos/400/300?random=$vehicleId',
           createdAt: DateTime.now().subtract(Duration(days: vehicleId)),
         );
       } else {
@@ -77,10 +77,10 @@ class ApiService {
   static Future<Vehicle?> createVehicle(Map<String, dynamic> vehicleData) async {
     try {
       final response = await http.post(
-        Uri.parse(''),
+        Uri.parse('$baseUrl$vehiclesEndpoint'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
-          'title': ' ',
+          'title': '${vehicleData['brand']} ${vehicleData['model']}',
           'body': vehicleData['description'],
           'userId': 1,
         }),
@@ -113,11 +113,11 @@ class ApiService {
   static Future<Vehicle?> updateVehicle(String id, Map<String, dynamic> vehicleData) async {
     try {
       final response = await http.put(
-        Uri.parse('/'),
+        Uri.parse('$baseUrl$vehiclesEndpoint/$id'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'id': int.parse(id),
-          'title': ' ',
+          'title': '${vehicleData['brand']} ${vehicleData['model']}',
           'body': vehicleData['description'],
           'userId': 1,
         }),
@@ -150,7 +150,7 @@ class ApiService {
   static Future<bool> deleteVehicle(String id) async {
     try {
       final response = await http.delete(
-        Uri.parse('/'),
+        Uri.parse('$baseUrl$vehiclesEndpoint/$id'),
         headers: {'Content-Type': 'application/json'},
       );
 

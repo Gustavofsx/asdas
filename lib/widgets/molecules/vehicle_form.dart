@@ -1,4 +1,4 @@
-Ôªøimport 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../atoms/custom_button.dart';
 import '../atoms/custom_text_field.dart';
 
@@ -64,60 +64,60 @@ class _VehicleFormState extends State<VehicleForm> {
 
   String? _validateRequired(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Este campo √© obrigat√≥rio';
+      return 'Este campo È obrigatÛrio';
     }
     return null;
   }
 
   String? _validateYear(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Ano √© obrigat√≥rio';
+      return 'Ano È obrigatÛrio';
     }
     final year = int.tryParse(value);
     if (year == null) {
-      return 'Ano deve ser um n√∫mero v√°lido';
+      return 'Ano deve ser um n˙mero v·lido';
     }
     if (year < 1900 || year > DateTime.now().year + 1) {
-      return 'Ano deve estar entre 1900 e ';
+      return 'Ano deve estar entre 1900 e 2025';
     }
     return null;
   }
 
   String? _validatePrice(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Pre√ßo √© obrigat√≥rio';
+      return 'PreÁo È obrigatÛrio';
     }
     final price = double.tryParse(value);
     if (price == null) {
-      return 'Pre√ßo deve ser um n√∫mero v√°lido';
+      return 'PreÁo deve ser um n˙mero v·lido';
     }
     if (price <= 0) {
-      return 'Pre√ßo deve ser maior que zero';
+      return 'PreÁo deve ser maior que zero';
     }
     return null;
   }
 
   String? _validateStock(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Quantidade √© obrigat√≥ria';
+      return 'Quantidade È obrigatÛria';
     }
     final stock = int.tryParse(value);
     if (stock == null) {
-      return 'Quantidade deve ser um n√∫mero v√°lido';
+      return 'Quantidade deve ser um n˙mero v·lido';
     }
     if (stock < 0) {
-      return 'Quantidade n√£o pode ser negativa';
+      return 'Quantidade n„o pode ser negativa';
     }
     return null;
   }
 
   String? _validateImageUrl(String? value) {
     if (value == null || value.isEmpty) {
-      return 'URL da imagem √© obrigat√≥ria';
+      return 'URL da imagem È obrigatÛria';
     }
     final uri = Uri.tryParse(value);
     if (uri == null || !uri.hasAbsolutePath) {
-      return 'URL inv√°lida';
+      return 'URL inv·lida';
     }
     return null;
   }
@@ -142,7 +142,7 @@ class _VehicleFormState extends State<VehicleForm> {
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      label: 'Formul√°rio de ve√≠culo',
+      label: 'Formul·rio de veÌculo',
       child: Form(
         key: _formKey,
         child: Column(
@@ -193,7 +193,7 @@ class _VehicleFormState extends State<VehicleForm> {
               children: [
                 Expanded(
                   child: CustomTextField(
-                    label: 'Pre√ßo',
+                    label: 'PreÁo',
                     hintText: '50000.00',
                     controller: _priceController,
                     validator: _validatePrice,
@@ -216,8 +216,8 @@ class _VehicleFormState extends State<VehicleForm> {
             ),
             const SizedBox(height: 16),
             CustomTextField(
-              label: 'Descri√ß√£o',
-              hintText: 'Descri√ß√£o do ve√≠culo...',
+              label: 'DescriÁ„o',
+              hintText: 'DescriÁ„o do veÌculo...',
               controller: _descriptionController,
               validator: _validateRequired,
               maxLines: 3,
@@ -233,7 +233,7 @@ class _VehicleFormState extends State<VehicleForm> {
             ),
             const SizedBox(height: 24),
             CustomButton(
-              text: widget.initialData != null ? 'Atualizar Ve√≠culo' : 'Adicionar Ve√≠culo',
+              text: widget.initialData != null ? 'Atualizar VeÌculo' : 'Adicionar VeÌculo',
               onPressed: _submitForm,
               isLoading: widget.isLoading,
               icon: widget.initialData != null ? Icons.update : Icons.add,

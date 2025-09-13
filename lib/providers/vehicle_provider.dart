@@ -1,4 +1,4 @@
-Ôªøimport 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart';
 import '../models/vehicle.dart';
 import '../services/api_service.dart';
 
@@ -11,7 +11,7 @@ class VehicleProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   String get error => _error;
 
-  // Dados mockados para demonstra√ß√£o
+  // Dados mockados para demonstraÁ„o
   void loadMockData() {
     _isLoading = true;
     notifyListeners();
@@ -27,7 +27,7 @@ class VehicleProvider with ChangeNotifier {
           color: 'Prata',
           price: 125000.00,
           stockQuantity: 5,
-          description: 'Sedan compacto com excelente economia de combust√≠vel',
+          description: 'Sedan compacto com excelente economia de combustÌvel',
           imageUrl: 'https://via.placeholder.com/300x200/4CAF50/FFFFFF?text=Toyota+Corolla',
           createdAt: DateTime.now().subtract(const Duration(days: 30)),
         ),
@@ -51,7 +51,7 @@ class VehicleProvider with ChangeNotifier {
           color: 'Branco',
           price: 135000.00,
           stockQuantity: 2,
-          description: 'Hatchback premium com tecnologia avan√ßada',
+          description: 'Hatchback premium com tecnologia avanÁada',
           imageUrl: 'https://via.placeholder.com/300x200/FF9800/FFFFFF?text=VW+Golf',
           createdAt: DateTime.now().subtract(const Duration(days: 20)),
         ),
@@ -74,7 +74,7 @@ class VehicleProvider with ChangeNotifier {
     });
   }
 
-  // Carrega ve√≠culos da API
+  // Carrega veÌculos da API
   Future<void> loadVehiclesFromApi() async {
     _isLoading = true;
     _error = '';
@@ -92,15 +92,15 @@ class VehicleProvider with ChangeNotifier {
     }
   }
 
-  // Adiciona ve√≠culo via API
+  // Adiciona veÌculo via API
   Future<bool> addVehicleFromApi(Map<String, dynamic> vehicleData) async {
     _isLoading = true;
     notifyListeners();
 
     try {
-      print('Dados recebidos no Provider: '); // Debug
+      print('Dados recebidos no Provider: $vehicleData'); // Debug
       
-      // Simula cria√ß√£o de ve√≠culo localmente (j√° que a API n√£o salva realmente)
+      // Simula criaÁ„o de veÌculo localmente (j· que a API n„o salva realmente)
       final newVehicle = Vehicle(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         brand: vehicleData['brand'] ?? '',
@@ -114,16 +114,16 @@ class VehicleProvider with ChangeNotifier {
         createdAt: DateTime.now(),
       );
       
-      print('Ve√≠culo criado:   - Imagem: '); // Debug
+      print('VeÌculo criado: ${newVehicle.brand} ${newVehicle.model} - Imagem: ${newVehicle.imageUrl}'); // Debug
       
       _vehicles.add(newVehicle);
       _isLoading = false;
       notifyListeners();
       
-      print('Ve√≠culo adicionado com sucesso:  '); // Debug
+      print('VeÌculo adicionado com sucesso: ${newVehicle.id}'); // Debug
       return true;
     } catch (e) {
-      print('Erro ao adicionar ve√≠culo: '); // Debug
+      print('Erro ao adicionar veÌculo: $e'); // Debug
       _error = e.toString();
       _isLoading = false;
       notifyListeners();
@@ -131,7 +131,7 @@ class VehicleProvider with ChangeNotifier {
     }
   }
 
-  // Atualiza ve√≠culo via API
+  // Atualiza veÌculo via API
   Future<bool> updateVehicleFromApi(String id, Map<String, dynamic> vehicleData) async {
     _isLoading = true;
     notifyListeners();
@@ -147,7 +147,7 @@ class VehicleProvider with ChangeNotifier {
           return true;
         }
       }
-      _error = 'Erro ao atualizar ve√≠culo na API';
+      _error = 'Erro ao atualizar veÌculo na API';
       _isLoading = false;
       notifyListeners();
       return false;
@@ -159,7 +159,7 @@ class VehicleProvider with ChangeNotifier {
     }
   }
 
-  // Remove ve√≠culo via API
+  // Remove veÌculo via API
   Future<bool> removeVehicleFromApi(String id) async {
     _isLoading = true;
     notifyListeners();
@@ -172,7 +172,7 @@ class VehicleProvider with ChangeNotifier {
         notifyListeners();
         return true;
       } else {
-        _error = 'Erro ao remover ve√≠culo da API';
+        _error = 'Erro ao remover veÌculo da API';
         _isLoading = false;
         notifyListeners();
         return false;

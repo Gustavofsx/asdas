@@ -1,5 +1,9 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../models/vehicle.dart';
+import '../providers/vehicle_provider.dart';
+import '../widgets/molecules/stock_adjustment_dialog.dart';
+import 'edit_vehicle_screen.dart';
 
 class VehicleDetailsScreen extends StatelessWidget {
   final Vehicle vehicle;
@@ -8,6 +12,136 @@ class VehicleDetailsScreen extends StatelessWidget {
     super.key,
     required this.vehicle,
   });
+
+  void _showDeleteConfirmation(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: const Color(0xFF2d3748),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: const Row(
+            children: [
+              Icon(
+                Icons.warning,
+                color: Colors.red,
+              ),
+              SizedBox(width: 12),
+              Text(
+                'Confirmar Exclusão',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          content: Text(
+            'Tem certeza que deseja excluir este veículo?\n\n${vehicle.brand} ${vehicle.model} (${vehicle.year})\n\nEsta ação não pode ser desfeita.',
+            style: TextStyle(
+              color: Colors.grey[300],
+              fontSize: 16,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                'Cancelar',
+                style: TextStyle(color: Colors.grey[400]),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await _deleteVehicle(context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Excluir'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _deleteVehicle(BuildContext context) async {
+    try {
+      final success = await context.read<VehicleProvider>().removeVehicleFromApi(vehicle.id);
+      
+      if (success) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Text('Veículo excluído com sucesso!'),
+              backgroundColor: Colors.green,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          );
+          Navigator.of(context).pop();
+        }
+      } else {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Text('Erro ao excluir veículo. Tente novamente.'),
+              backgroundColor: Colors.red,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Erro: $e'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        );
+      }
+    }
+  }
+
+  void _showStockAdjustment(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StockAdjustmentDialog(
+          currentStock: vehicle.stockQuantity,
+          onAdjust: (newStock) async {
+            context.read<VehicleProvider>().updateStockQuantity(vehicle.id, newStock);
+            
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Estoque ajustado para $newStock unidades'),
+                backgroundColor: Colors.green,
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +155,9 @@ class VehicleDetailsScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.edit),
             onPressed: () {
-              // TODO: Implementar edição
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Funcionalidade será implementada na próxima etapa'),
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => EditVehicleScreen(vehicle: vehicle),
                 ),
               );
             },
@@ -75,7 +208,7 @@ class VehicleDetailsScreen extends StatelessWidget {
                   
                   // Ano e cor
                   Text(
-                    '${vehicle.year} • ${vehicle.color}',
+                    '${vehicle.year}  ${vehicle.color}',
                     style: TextStyle(
                       fontSize: 18,
                       color: Colors.grey[600],
@@ -87,20 +220,20 @@ class VehicleDetailsScreen extends StatelessWidget {
                   // Preço
                   Container(
                     padding: const EdgeInsets.all(16),
-                                         decoration: BoxDecoration(
-                       color: const Color(0xFF10B981).withValues(alpha: 0.1),
-                       borderRadius: BorderRadius.circular(12),
-                       border: Border.all(
-                         color: const Color(0xFF10B981).withValues(alpha: 0.3),
-                       ),
-                     ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF10B981).withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: const Color(0xFF10B981).withValues(alpha: 0.3),
+                      ),
+                    ),
                     child: Row(
                       children: [
-                                                 Icon(
-                           Icons.attach_money,
-                           color: const Color(0xFF059669),
-                           size: 32,
-                         ),
+                        Icon(
+                          Icons.attach_money,
+                          color: const Color(0xFF059669),
+                          size: 32,
+                        ),
                         const SizedBox(width: 16),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,14 +245,14 @@ class VehicleDetailsScreen extends StatelessWidget {
                                 color: Colors.grey[600],
                               ),
                             ),
-                                                         Text(
-                               'R\$ ${vehicle.price.toStringAsFixed(2)}',
-                               style: TextStyle(
-                                 fontSize: 28,
-                                 fontWeight: FontWeight.bold,
-                                 color: const Color(0xFF059669),
-                               ),
-                             ),
+                            Text(
+                              'R\$ ${vehicle.price.toStringAsFixed(2)}',
+                              style: TextStyle(
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFF059669),
+                              ),
+                            ),
                           ],
                         ),
                       ],
@@ -155,37 +288,23 @@ class VehicleDetailsScreen extends StatelessWidget {
                     children: [
                       Expanded(
                         child: ElevatedButton.icon(
-                          onPressed: () {
-                            // TODO: Implementar ajuste de estoque
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Funcionalidade será implementada na próxima etapa'),
-                              ),
-                            );
-                          },
+                          onPressed: () => _showStockAdjustment(context),
                           icon: const Icon(Icons.inventory),
                           label: const Text('Ajustar Estoque'),
-                                                     style: ElevatedButton.styleFrom(
-                             backgroundColor: const Color(0xFF3B82F6),
-                             foregroundColor: Colors.white,
-                             padding: const EdgeInsets.symmetric(vertical: 16),
-                             shape: RoundedRectangleBorder(
-                               borderRadius: BorderRadius.circular(12),
-                             ),
-                           ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF3B82F6),
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(width: 16),
                       Expanded(
                         child: OutlinedButton.icon(
-                          onPressed: () {
-                            // TODO: Implementar exclusão
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Funcionalidade será implementada na próxima etapa'),
-                              ),
-                            );
-                          },
+                          onPressed: () => _showDeleteConfirmation(context),
                           icon: const Icon(Icons.delete),
                           label: const Text('Excluir'),
                           style: OutlinedButton.styleFrom(
